@@ -1,7 +1,7 @@
-chcp 65001
-
-@echo
-
-poetry run streamlit run "C:\Users\NEO\Desktop\Projects\Community_Website\community_website\👋Hoşgeldiniz.py"
-
-Exit
+@echo off
+chcp 65001 >nul
+pushd "%~dp0" || exit /b 1
+poetry run streamlit run "community_website\👋Hoşgeldiniz.py"
+set "launch_result=%errorlevel%"
+popd
+exit /b %launch_result%

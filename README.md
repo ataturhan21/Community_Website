@@ -13,9 +13,11 @@
 
 # TOBB ETU CS Community Website
 
-It is the website of our CS Community
+A Streamlit website for the TOBB ETÜ Computer Science Community, with team information, an event calendar, project plans, youth programs, a weekly menu, and a feedback form.
 
-[WebApp Link](https://tobbetu-bilgisayar-toplulugu.streamlit.app/)
+This repository is a fork of [TOBB-ETU-CS-Community/Community_Website](https://github.com/TOBB-ETU-CS-Community/Community_Website).
+
+[Community-hosted app](https://tobbetu-bilgisayar-toplulugu.streamlit.app/)
 
 ## Table of Contents
 
@@ -39,7 +41,7 @@ Before setting up the project, ensure that you have the following prerequisites 
 1. Clone the project repository:
 
 ```
-git clone https://github.com/TOBB-ETU-CS-Community/Community_Website.git
+git clone https://github.com/ataturhan21/Community_Website.git
 ```
 
 2. Navigate to the project directory:
@@ -58,20 +60,27 @@ This command will create a virtual environment and install all the necessary dep
 
 ## Usage
 
-1. Activate the virtual environment created by Poetry:
+Run from the repository root so the relative paths to images, spreadsheets, and styles resolve correctly:
 
-```
-poetry shell
-```
-
-2. Run the project:
-
-```
-streamlit run "community_website\👋 Hoşgeldiniz.py"
+```bash
+poetry run streamlit run "community_website/👋Hoşgeldiniz.py"
 ```
 
-or click start.bat file
+On Windows, `start.bat` runs the same entry point from the repository directory.
 
+## Content and project guide
+
+| Path | Contents |
+| --- | --- |
+| [Welcome page](community_website/%F0%9F%91%8BHo%C5%9Fgeldiniz.py) | Application entry point |
+| [Pages](community_website/pages/) | Team, events, plans, programs, menu, and feedback |
+| [Spreadsheets](static/xlsx/) | Team, event, project-plan, and program data |
+| [Static assets](static/) | Community imagery, program images, and weekly menu |
+| [Utilities](community_website/modules/utils.py) | Excel loading, page configuration, and shared styling |
+
+The spreadsheet loader expects a worksheet named `Sheet1`. Keep the column names and date formats expected by each page when editing the workbooks. Published event and program dates are stored content, so review them before reusing this website for a current community.
+
+The original environment uses Python 3.10 and Poetry 1.4.0. The repository includes `poetry.lock`; this update does not upgrade dependencies.
 
 ## Contributing
 
