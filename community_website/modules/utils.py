@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime
+from datetime import date, datetime
 
 import pandas as pd
 import streamlit as st
@@ -68,19 +68,35 @@ def load_excel(
     original_format: str = "%d.%m.%Y",
     new_format: str = "%Y-%m-%d",
 ):
+    """Read workbook data and return typed, chronologically sorted date columns.
+
+    Excel cells may contain native dates or strings in ``original_format``.
+    ``new_format`` remains accepted for compatibility; display formatting belongs
+    to the caller because these columns contain datetime values, not strings.
+    """
     excel = pd.read_excel(
         io=file_path,
         sheet_name="Sheet1",
     )
-    if date_columns is not None:
+    if date_columns:
         for date_column in date_columns:
-            for i in range(len(excel)):
-                date_string = excel[date_column][i]
-                date_object = datetime.strptime(date_string, original_format)
-                new_date_string = date_object.strftime(new_format)
-                excel[date_column][i] = datetime.strptime(
-                    new_date_string, new_format
+
+            def parse_date(value):
+                if pd.isna(value):
+                    return pd.NaT
+                if isinstance(value, str):
+                    return datetime.strptime(value.strip(), original_format)
+                if isinstance(value, (datetime, date, pd.Timestamp)):
+                    return pd.Timestamp(value).normalize()
+                raise ValueError(
+                    f"Unsupported date value in {date_column}: {value!r}"
                 )
-            excel.sort_values(by=date_column, inplace=True)
-            excel.reset_index(drop=True, inplace=True)
+
+            excel[date_column] = pd.to_datetime(
+                excel[date_column].map(parse_date)
+            )
+        excel = excel.sort_values(
+            by=date_columns, kind="stable", na_position="last"
+        )
+        excel = excel.reset_index(drop=True)
     return excel
